@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>853393913215-inmtn3e079ht3nk18or0kbcp8n9hgkva.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.853393913215-inmtn3e079ht3nk18or0kbcp8n9hgkva</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA2o7dl2Xo17JFjto_HHl5C5pUNv8Dnlq0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>853393913215</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.pop</string>
+	<key>PROJECT_ID</key>
+	<string>pop-game-ec6f2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pop-game-ec6f2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:853393913215:ios:21aa6ab234e98c202f564a</string>
+</dict>
+</plist>

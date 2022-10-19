@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "853393913215",
+    "project_id": "pop-game-ec6f2",
+    "storage_bucket": "pop-game-ec6f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853393913215:android:a5cdaaeace255e932f564a",
+        "android_client_info": {
+          "package_name": "com.example.pop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853393913215-9v0l7g9mv3bt230eunvnr60rv93plerj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC384L4AQRBN5zgAZFKDa0cwadVepIqzO0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853393913215-9v0l7g9mv3bt230eunvnr60rv93plerj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
