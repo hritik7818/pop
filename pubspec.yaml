@@ -44,6 +44,8 @@ dependencies:
   firebase_storage: ^10.3.11
   firebase_database: ^9.1.7
   uuid: ^3.0.6
+  fluttertoast: ^8.1.1
+  lottie: ^1.4.3
 
 dev_dependencies:
   flutter_test:

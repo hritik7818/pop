@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pop/screen/play_online.dart';
 import 'package:pop/screen/play_with_ai.dart';
 import 'package:pop/screen/two_player.dart';
+
+import 'FindingScreen.dart';
+import 'login.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -99,9 +104,21 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    settings: const RouteSettings(name: "homepage"),
-                    builder: (context) => const PlayOnline()));
+                FirebaseAuth auth  = FirebaseAuth.instance;
+                if(auth.currentUser==null)
+                  {
+                    // not login
+                    Fluttertoast.showToast(msg: "not login");
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage(),));
+
+                  }else{
+                  Fluttertoast.showToast(msg: "user is login");
+                  //login
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const FindingScreen(),));
+                }
+
+                // Navigator.of(context).push(MaterialPageRoute(settings: const RouteSettings(name: "homepage"),
+                //     builder: (context) => const PlayOnline()));
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(240.w, 50.h),

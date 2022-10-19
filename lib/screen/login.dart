@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pop/screen/FindingScreen.dart';
 import 'package:pop/uitls/uid.dart';
 import 'package:provider/provider.dart';
 import 'package:pop/firebase_services/authentication_services.dart';
@@ -67,9 +69,6 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     CustomButton(
                       onPressed: () {
-                        print("email : ${loginProvider.emailController.text}");
-                        print(
-                            "email : ${loginProvider.passwordController.text}");
                         loginUser(
                           firebaseProvider: firebaseProvider,
                           context: context,
@@ -99,16 +98,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void loginUser(
-      {firebaseProvider, loginProvider, email, password, context}) async {
-    print("Click on login button");
+  void loginUser({firebaseProvider, loginProvider, email, password, context}) async {
     var result = await firebaseProvider.loginUser(email, password);
     uid = result.uid;
     if (result == null) {
-      print("email or password is not valid");
+      Fluttertoast.showToast(msg: "wrong email and password");
     } else {
-      // Navigator.of(context)
-      //     .push(MaterialPageRoute(builder: (context) => const OnlineGame()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => FindingScreen(),));
     }
   }
 }
