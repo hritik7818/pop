@@ -21,11 +21,19 @@ class RoomScreen extends StatefulWidget {
 
 class _RoomScreenState extends State<RoomScreen> {
   DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await ref.child(gameId).remove();
+        await ref.child(widget.gameID).remove();
         return true;
       },
       child: Scaffold(
@@ -75,7 +83,8 @@ class _RoomScreenState extends State<RoomScreen> {
                 height: 50,
               ),
               StreamBuilder(
-                stream: ref.child(gameId.toString()).onValue,
+
+                stream: ref.child(widget.gameID.toString()).onValue,
                 builder: (context,snapshot) {
                   Map<dynamic, dynamic> map = snapshot.data?.snapshot.value as dynamic;
                   print(map);
@@ -91,13 +100,13 @@ class _RoomScreenState extends State<RoomScreen> {
                             width: 100,
                             color: Colors.white,
                           ),
-                          SizedBox(height: 20,),
-                          Text("test",style: TextStyle(color: Colors.white),),
+                          const SizedBox(height: 20,),
+                          Text(data!.child("player1").value.toString(),style: TextStyle(color: Colors.white),),
                         ],
                       ),
                       Spacer(),
                       const Text("VS",style: TextStyle(color: Colors.white,fontSize:20),),
-                      Spacer(),
+                      const Spacer(),
                       Column(
                         children: [
                           Container(
@@ -106,7 +115,7 @@ class _RoomScreenState extends State<RoomScreen> {
                             color: Colors.white,
                           ),
                           SizedBox(height: 20,),
-                          const Text("Player 2",style: TextStyle(color: Colors.white),),
+                           Text(data!.child("player2").value.toString(),style: TextStyle(color: Colors.white),),
                         ],
                       ),
                       Spacer(),
@@ -137,5 +146,9 @@ class _RoomScreenState extends State<RoomScreen> {
         ),
       ),
     );
+  }
+
+  void getUsers() {
+
   }
 }
