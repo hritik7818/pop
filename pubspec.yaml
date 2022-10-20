@@ -46,6 +46,7 @@ dependencies:
   uuid: ^3.0.6
   fluttertoast: ^8.1.1
   lottie: ^1.4.3
+  clipboard: ^0.1.3
 
 dev_dependencies:
   flutter_test:

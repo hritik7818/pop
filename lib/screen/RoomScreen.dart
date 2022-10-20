@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,10 @@ import 'FindingScreen.dart';
 import 'login.dart';
 
 class RoomScreen extends StatefulWidget {
-  RoomScreen({required this.gameID});
+  RoomScreen({required this.gameID,required this.userType});
   String gameID;
+  String userType;
+
 
   @override
   State<RoomScreen> createState() => _RoomScreenState();
@@ -24,9 +27,9 @@ class _RoomScreenState extends State<RoomScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getUsers();
+    onBack();
+    gameStarter();
   }
 
   @override
@@ -78,7 +81,16 @@ class _RoomScreenState extends State<RoomScreen> {
                   ),
                 ],
               ),
-               Text("ROOM CODE: ${widget.gameID}",style: TextStyle(color: Colors.white),),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Text("ROOM CODE: ${widget.gameID}",style: TextStyle(color: Colors.white),),
+                   IconButton(onPressed: () {
+                     FlutterClipboard.copy(widget.gameID).then(( value ) =>
+                         Fluttertoast.showToast(msg: "copied"));
+                   }, icon: Icon(Icons.copy,color: Colors.white,))
+                 ],
+               ),
               const SizedBox(
                 height: 50,
               ),
@@ -86,8 +98,8 @@ class _RoomScreenState extends State<RoomScreen> {
 
                 stream: ref.child(widget.gameID.toString()).onValue,
                 builder: (context,snapshot) {
-                  Map<dynamic, dynamic> map = snapshot.data?.snapshot.value as dynamic;
-                  print(map);
+                  // Map<dynamic, dynamic> map = snapshot.data?.snapshot.value as dynamic;
+                  // print(map);
                   DataSnapshot? data = snapshot.data?.snapshot;
                   return snapshot.data!=null?Row(
 
@@ -120,13 +132,14 @@ class _RoomScreenState extends State<RoomScreen> {
                       ),
                       Spacer(),
                     ],
-                  ):const Text("something wrong");
+                  ): const Center(child: CircularProgressIndicator(color: Colors.white,),);
                 }
               ),
-              SizedBox(height: 50,),
+              const SizedBox(height: 50,),
+              (widget.userType=='CREATE')?
               ElevatedButton(
                 onPressed: () {
-
+                  startGame();
                 },
                 style: ElevatedButton.styleFrom(
                   fixedSize: Size(240.w, 50.h),
@@ -139,7 +152,7 @@ class _RoomScreenState extends State<RoomScreen> {
                     fontSize: 20,
                   ),
                 ),
-              ),
+              ):SizedBox()
 
             ],
           ),
@@ -148,7 +161,33 @@ class _RoomScreenState extends State<RoomScreen> {
     );
   }
 
-  void getUsers() {
 
+  void onBack() {
+    ref.child(widget.gameID.toString()).onValue.listen((event) {
+      if(event.snapshot.value ==null)
+        {
+          Navigator.pop(context);
+        }
+    });
   }
+
+  void gameStarter() {
+    ref.child(widget.gameID.toString()+"/isStart").onValue.listen((event) {
+
+      if( widget.userType=='JOIN' && event.snapshot.value.toString()=='YES')
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => GamePage(),));
+      }
+    });
+  }
+
+  Future<void> startGame() async {
+    Map<String, String>  map = {
+      "isStart":"YES",
+    };
+    await ref.child(widget.gameID.toString()).update(map);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GamePage(),));
+  }
+
+
 }

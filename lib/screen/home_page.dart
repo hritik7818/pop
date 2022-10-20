@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pop/screen/RoomScreen.dart';
+import 'package:pop/screen/joinRoom.dart';
+import 'package:pop/screen/onlineGame/onlinePlay.dart';
 import 'package:pop/screen/play_online.dart';
 import 'package:pop/screen/play_with_ai.dart';
 import 'package:pop/screen/two_player.dart';
@@ -140,7 +142,7 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => JoinRoomScreen(),));
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(240.w, 50.h),
@@ -188,10 +190,11 @@ class HomePage extends StatelessWidget {
       "player1":"rahul",
       "player2":"Waiting...",
       "turn":"P",
-      'winner':"N/A"
+      'winner':"N/A",
+      'isStart':"NO",
 
     };
     await ref.child(gameKey).set(map);
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>  RoomScreen(gameID: gameKey,),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>  RoomScreen(gameID: gameKey,userType: "CREATE",),));
   }
 }
