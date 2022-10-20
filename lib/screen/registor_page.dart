@@ -100,6 +100,8 @@ class RegisterPage extends StatelessWidget {
         "email": email,
         "password": password,
         "score": 0,
+        "OpponentUser": "N/A",
+        "CurrentGameID": "N/A",
       });
     } catch (e) {
       print(e.toString());

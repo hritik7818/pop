@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pop/screen/RoomScreen.dart';
 import 'package:pop/screen/play_online.dart';
 import 'package:pop/screen/play_with_ai.dart';
 import 'package:pop/screen/two_player.dart';
@@ -132,9 +134,64 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+
+            SizedBox(
+              height: 40.h,
+            ),
+            ElevatedButton(
+              onPressed: () {
+
+              },
+              style: ElevatedButton.styleFrom(
+                fixedSize: Size(240.w, 50.h),
+                backgroundColor: const Color.fromARGB(255, 255, 230, 0),
+              ),
+              child: const Text(
+                "JOIN ROOM  ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+
+            SizedBox(
+              height: 40.h,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                createRoom(context);
+              },
+              style: ElevatedButton.styleFrom(
+                fixedSize: Size(240.w, 50.h),
+                backgroundColor: const Color.fromARGB(255, 255, 230, 0),
+              ),
+              child: const Text(
+                "CREATE ROOM ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> createRoom(BuildContext context) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
+    String gameKey = ref.push().key.toString();
+    Map<String, String>  map = {
+      "move":"9,9,9,9,9,9,9,9,9",
+      "player1":"rahul",
+      "player2":"Waiting...",
+      "turn":"P",
+      'winner':"N/A"
+
+    };
+    await ref.child(gameKey).set(map);
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>  RoomScreen(gameID: gameKey,),));
   }
 }

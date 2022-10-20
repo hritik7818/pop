@@ -15,12 +15,14 @@ class FindingScreen extends StatefulWidget {
 class _FindingScreenState extends State<FindingScreen> {
   DatabaseReference onlineRef = FirebaseDatabase.instance.ref("Online");
   FirebaseAuth auth  = FirebaseAuth.instance;
+  String onlineKey = "";
   @override
   void initState() {
     // TODO: implement initStat
     // make user online
     Map<String,String> map = {"${auth.currentUser?.uid}":"${auth.currentUser?.email}"};
-    onlineRef.set(map).then((value) => {
+     onlineKey = onlineRef.push().key!;
+    onlineRef.child(onlineKey).set(map).then((value) => {
       Fluttertoast.showToast(msg: "you are online")
     });
     super.initState();
@@ -29,7 +31,7 @@ class _FindingScreenState extends State<FindingScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-         await onlineRef.child('${auth.currentUser?.uid}').remove().then((value) => {
+         await onlineRef.child('${onlineKey}').remove().then((value) => {
            Fluttertoast.showToast(msg: "out of game")
          });
          return true;
@@ -42,5 +44,7 @@ class _FindingScreenState extends State<FindingScreen> {
       ),
     );
   }
+
+
 
 }
