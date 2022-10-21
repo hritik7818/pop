@@ -186,7 +186,7 @@ class HomePage extends StatelessWidget {
     DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
     String gameKey = ref.push().key.toString();
     Map<String, String>  map = {
-      "move":"9,9,9,9,9,9,9,9,9",
+      "move":",,,,,,,,",
       "player1":"rahul",
       "player2":"Waiting...",
       "turn":"P",

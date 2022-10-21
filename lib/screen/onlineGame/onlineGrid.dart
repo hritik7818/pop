@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GameGridOnline extends StatefulWidget {
-  final List move;
+  List move;
   final Function toggleMove;
   final int moveCount;
   final Function incrementMoveCount;
   final Function winCheck;
-  final String turn;
+  late final String turn;
   final String gameId;
-  const GameGridOnline({
+   GameGridOnline({
     required this.move,
     required this.turn,
     required this.moveCount,
@@ -27,6 +27,14 @@ class GameGridOnline extends StatefulWidget {
 class _GameGridOnlineState extends State<GameGridOnline> {
   bool isGridActive = true;
   @override
+  void initState() {
+    // TODO: implement initState
+    updatelist();
+    toggleturn();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
@@ -37,16 +45,14 @@ class _GameGridOnlineState extends State<GameGridOnline> {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            widget.move[index] == "" && isGridActive
-                ? setState(() {
-                    updateMove(ref);
-                    widget.move[index] = widget.turn;
-                    widget.toggleMove();
-                    widget.incrementMoveCount();
+            setState(() {
+              widget.move[index] = widget.turn;
+              updateMove(ref);
+              widget.toggleMove();
+              widget.incrementMoveCount();
 
-                    widget.winCheck();
-                  })
-                : null;
+              widget.winCheck();
+            });
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -61,8 +67,7 @@ class _GameGridOnlineState extends State<GameGridOnline> {
               child: Text(
                 widget.move[index],
                 style: TextStyle(
-                  color:
-                      widget.move[index] == "P" ? Colors.blue : Colors.yellow,
+                  color: widget.move[index] == "P" ? Colors.blue : Colors.yellow,
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
@@ -74,8 +79,31 @@ class _GameGridOnlineState extends State<GameGridOnline> {
     );
   }
 
-  void updateMove(DatabaseReference ref) async {
-    print("update move run");
-    await ref.update({"move": "fkjdsa"});
+  void updatelist() {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
+    ref.child("move").onValue.listen((event) {
+      setState(() {
+       widget.move = event.snapshot.value.toString().split(',');
+      });
+    });
   }
+
+  void updateMove(DatabaseReference ref) async {
+    String move =  widget.move.toString();
+    move = move.substring(1,move.length-1);
+    await ref.update({"move": move});
+    await ref.update({"turn": widget.turn=='P'?'O':'P'});
+    updatelist();
+  }
+
+  void toggleturn() {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
+    ref.child("turn").onValue.listen((event) {
+      setState(() {
+        widget.turn = event.snapshot.value.toString();
+      });
+    });
+  }
+
+
 }
