@@ -5,6 +5,8 @@ import 'package:pop/widgets/Score_board.dart';
 import 'package:pop/widgets/game_status.dart';
 import 'package:pop/widgets/grid.dart';
 
+import 'GameStatusFirebase.dart';
+
 class OnlinePlay extends StatefulWidget {
   final String gameID;
   const OnlinePlay({required this.gameID});
@@ -136,14 +138,14 @@ class _OnlinePlayState extends State<OnlinePlay> {
               SizedBox(
                 height: 40.h,
               ),
-              Status(turn, resetMove),
+              GameStatusFirebase(widget.gameID),
               SizedBox(
                 height: 150.h,
               ),
               Expanded(
                   child: GameGridOnline(
-                      move: move,
-                      turn: turn,
+                      // move: move,
+                      // turn: turn,
                       moveCount: moveCount,
                       toggleMove: toggleMove,
                       winCheck: winCheck,
