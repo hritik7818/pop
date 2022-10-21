@@ -8,7 +8,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pop/widgets/Score_board.dart';
 
 class OnlineGame extends StatefulWidget {
-  const OnlineGame({super.key});
+   OnlineGame({required this.gameId});
+
+  String gameId;
   @override
   State<OnlineGame> createState() => _OnlineGameState();
 }
@@ -26,6 +28,9 @@ class _OnlineGameState extends State<OnlineGame> {
   @override
   void initState() {
     super.initState();
+    // functions
+    //update moves
+
   }
 
   incrementMoveCount() {

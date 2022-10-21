@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pop/screen/online_game.dart';
 import 'package:pop/screen/play_online.dart';
 import 'package:pop/screen/play_with_ai.dart';
 import 'package:pop/screen/two_player.dart';
@@ -16,8 +17,6 @@ class RoomScreen extends StatefulWidget {
   RoomScreen({required this.gameID,required this.userType});
   String gameID;
   String userType;
-
-
   @override
   State<RoomScreen> createState() => _RoomScreenState();
 }
@@ -186,7 +185,7 @@ class _RoomScreenState extends State<RoomScreen> {
       "isStart":"YES",
     };
     await ref.child(widget.gameID.toString()).update(map);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => GamePage(),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => OnlineGame(gameId: widget.gameID,),));
   }
 
 

@@ -27,8 +27,8 @@ class _LoadingPageState extends State<LoadingPage> {
     print("initState method is called !");
     fetchUid().then((value) {
       if (value == "Matched") {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const OnlineGame()));
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => const OnlineGame()));
         Future.delayed(const Duration(seconds: 15), () {
           ref1.child(uid).remove();
         });
