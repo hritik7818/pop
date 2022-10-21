@@ -30,9 +30,7 @@ class _GameGridOnlineState extends State<GameGridOnline> {
   @override
   void initState() {
     ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
-    // TODO: implement initState
-    // updatelist();
-    // toggleturn();
+    onUpdateList();
     super.initState();
   }
 
@@ -41,7 +39,6 @@ class _GameGridOnlineState extends State<GameGridOnline> {
 
     return StreamBuilder(
         stream: ref.onValue,
-
       builder: (context,snapshot) {
         List<String>? move2 = snapshot.data?.snapshot.child("move").value.toString().split(",")??
             ["","","","","","","","",""];
@@ -56,7 +53,7 @@ class _GameGridOnlineState extends State<GameGridOnline> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-                  updateMove(ref,move2,index,turn);
+                  updateMove(ref,move2,index,turn.trim());
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -67,9 +64,9 @@ class _GameGridOnlineState extends State<GameGridOnline> {
                   width: 90.h,
                   child: Center(
                     child: Text(
-                      move2[index]??"",
+                      move2[index].toString().trim()??"",
                       style: TextStyle(
-                        color: move2[index] == "P" ? Colors.blue : Colors.yellow,
+                        color: move2[index].trim() == "P" ? Colors.blue : Colors.yellow,
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
@@ -83,35 +80,76 @@ class _GameGridOnlineState extends State<GameGridOnline> {
       }
     );
   }
-  // get list
-
-  // void updatelist() {
-  //   DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
-  //   ref.child("move").onValue.listen((event) {
-  //     setState(() {
-  //      widget.move = event.snapshot.value.toString().split(',');
-  //     });
-  //   });
-  // }
 
   void updateMove(DatabaseReference ref,List<String> list,int index,String turn) async {
+    for(int i = 0; i<list.length; i++){
+      list[i] = list[i].trim();
+    }
+    print('before update  $list');
     list[index] = turn;
     String move =  list.toString();
     move = move.substring(1,move.length-1);
     await ref.update({"move": move});
+    print('after update  $list');
     await ref.update({"turn": turn=='P'?'O':'P'});
-    widget.winCheck();
+
   }
-  // void toggleturn() {
-  //   DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
-  //   ref.child("turn").onValue.listen((event) {
-  //     setState(() {
-  //       widget.turn = event.snapshot.value.toString();
-  //     });
-  //   });
-  // }
 
 
+  winCheck(List move, String turn) {
+    List win = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (var i = 0; i < win.length; i++) {
+      if ((move[win[i][0]].toString().trim() == "P" && move[win[i][1]].toString().trim() == "O" && move[win[i][2]].toString().trim() == "P")) {
+        showDialogBox("$turn win");
+      }
+    }
 
+  }
+
+  onUpdateList(){
+    ref.onValue.listen((event) {
+      List<String>? move2 = event.snapshot.child("move").value.toString().split(",")?? ["","","","","","","","",""];
+      String turn = event.snapshot.child("turn").value.toString();
+      if(move2!=null){
+        winCheck(move2, turn);
+        }
+    });
+  }
+
+  Future<dynamic> showDialogBox(text) {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (cxt) => AlertDialog(
+        title: Center(child: Text("$text win !")),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Play"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigator.of(context).popUntil(ModalRoute.withName("homepage"));
+              },
+              child: const Text("EXIT"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 }
