@@ -5,7 +5,8 @@ import 'package:pop/widgets/game_status.dart';
 import 'package:pop/widgets/grid.dart';
 
 class OnlinePlay extends StatefulWidget {
-  const OnlinePlay({super.key});
+  final String gameID;
+  const OnlinePlay({required this.gameID});
 
   @override
   State<OnlinePlay> createState() => _OnlinePlayState();
@@ -116,7 +117,6 @@ class _OnlinePlayState extends State<OnlinePlay> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

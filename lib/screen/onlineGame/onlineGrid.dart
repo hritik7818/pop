@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class GameGrid extends StatefulWidget {
+class GameGridOnline extends StatefulWidget {
   final List move;
   final Function toggleMove;
   final int moveCount;
@@ -12,7 +12,7 @@ class GameGrid extends StatefulWidget {
   final String turn;
   final bool isPlayerWin;
   final String gameId;
-  const GameGrid({
+  const GameGridOnline({
     required this.move,
     required this.turn,
     required this.moveCount,
@@ -25,10 +25,10 @@ class GameGrid extends StatefulWidget {
   });
 
   @override
-  State<GameGrid> createState() => _GameGridState();
+  State<GameGridOnline> createState() => _GameGridOnlineState();
 }
 
-class _GameGridState extends State<GameGrid> {
+class _GameGridOnlineState extends State<GameGridOnline> {
   bool isGridActive = true;
   @override
   Widget build(BuildContext context) {

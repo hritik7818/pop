@@ -28,8 +28,6 @@ class _OnlineGameState extends State<OnlineGame> {
   @override
   void initState() {
     super.initState();
-    // functions
-    //update moves
 
   }
 
