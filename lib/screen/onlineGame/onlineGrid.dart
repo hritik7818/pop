@@ -47,7 +47,7 @@ class _GameGridOnlineState extends State<GameGridOnline> {
         return StreamBuilder(
           stream: ref.onValue,
           builder: (context,snapshot) {
-            List<String> move2 = snapshot.data!.snapshot.child("move").value.toString().split(",")??
+            List<String>? move2 = snapshot.data?.snapshot.child("move").value.toString().split(",")??
                 ["","","","","","","","",""];
             String turn = snapshot.data!.snapshot.child("turn").value.toString();
             return Padding(
@@ -56,12 +56,22 @@ class _GameGridOnlineState extends State<GameGridOnline> {
                 onTap: () {
                   updateMove(ref,move2,index,turn);
                 },
-                child: Text(
-                  move2[index]??"",
-                  style: TextStyle(
-                    color: move2[index] == "P" ? Colors.blue : Colors.yellow,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: Colors.black,
+                  ),
+                  height: 90.h,
+                  width: 90.h,
+                  child: Center(
+                    child: Text(
+                      move2[index]??"",
+                      style: TextStyle(
+                        color: move2[index] == "P" ? Colors.blue : Colors.yellow,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
