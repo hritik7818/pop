@@ -32,8 +32,8 @@ class _GameGridOnlineState extends State<GameGridOnline> {
   bool isGridActive = true;
   @override
   Widget build(BuildContext context) {
-  DatabaseReference ref =
-      FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
     return GridView.builder(
       itemCount: 9,
       gridDelegate:
@@ -43,30 +43,12 @@ class _GameGridOnlineState extends State<GameGridOnline> {
           onTap: () {
             widget.move[index] == "" && isGridActive
                 ? setState(() {
-                    if (widget.isPlayerWin != null) {
-                      isGridActive = false;
-                    }
+                    updateMove(ref);
                     widget.move[index] = widget.turn;
                     widget.toggleMove();
                     widget.incrementMoveCount();
 
                     widget.winCheck();
-
-                    if (widget.findAndFindBlankBox != null) {
-                      Future.delayed(const Duration(seconds: 1), () {
-                        if (widget.isPlayerWin != null) {
-                          isGridActive = true;
-                        }
-                        if (widget.moveCount < 9 && !widget.isPlayerWin) {
-                          for (var i = 0; i < widget.move.length; i++) {
-                            if (widget.move[i] == "") {
-                              widget.findAndFindBlankBox();
-                              break;
-                            }
-                          }
-                        }
-                      });
-                    }
                   })
                 : null;
           },
@@ -94,5 +76,9 @@ class _GameGridOnlineState extends State<GameGridOnline> {
         );
       },
     );
+  }
+
+  void updateMove(DatabaseReference ref) async {
+    await ref.child(widget.gameId).update({"move": "fkjdsa"});
   }
 }
