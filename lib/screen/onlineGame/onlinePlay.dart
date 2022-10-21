@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pop/screen/onlineGame/onlineGrid.dart';
 import 'package:pop/widgets/Score_board.dart';
 import 'package:pop/widgets/game_status.dart';
 import 'package:pop/widgets/grid.dart';
@@ -140,15 +141,14 @@ class _OnlinePlayState extends State<OnlinePlay> {
                 height: 150.h,
               ),
               Expanded(
-                  child: GameGrid(
+                  child: GameGridOnline(
                       move: move,
                       turn: turn,
                       moveCount: moveCount,
                       toggleMove: toggleMove,
                       winCheck: winCheck,
                       incrementMoveCount: incrementMoveCount,
-                      findAndFindBlankBox: null,
-                      isPlayerWin: null)),
+                      gameId: widget.gameID,)),
               ScoreCard(pWinCount, tiesCount, oWinCount, "P1", "P2"),
             ],
           ),

@@ -8,9 +8,7 @@ class GameGridOnline extends StatefulWidget {
   final int moveCount;
   final Function incrementMoveCount;
   final Function winCheck;
-  final Function findAndFindBlankBox;
   final String turn;
-  final bool isPlayerWin;
   final String gameId;
   const GameGridOnline({
     required this.move,
@@ -19,8 +17,6 @@ class GameGridOnline extends StatefulWidget {
     required this.toggleMove,
     required this.winCheck,
     required this.incrementMoveCount,
-    required this.findAndFindBlankBox,
-    required this.isPlayerWin,
     required this.gameId,
   });
 
@@ -79,6 +75,7 @@ class _GameGridOnlineState extends State<GameGridOnline> {
   }
 
   void updateMove(DatabaseReference ref) async {
-    await ref.child(widget.gameId).update({"move": "fkjdsa"});
+    print("update move run");
+    await ref.update({"move": "fkjdsa"});
   }
 }
