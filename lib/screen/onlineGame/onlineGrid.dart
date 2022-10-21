@@ -39,17 +39,19 @@ class _GameGridOnlineState extends State<GameGridOnline> {
   @override
   Widget build(BuildContext context) {
 
-    return GridView.builder(
-      itemCount: 9,
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-      itemBuilder: (context, index) {
-        return StreamBuilder(
-          stream: ref.onValue,
-          builder: (context,snapshot) {
-            List<String>? move2 = snapshot.data?.snapshot.child("move").value.toString().split(",")??
-                ["","","","","","","","",""];
-            String turn = snapshot.data!.snapshot.child("turn").value.toString();
+    return StreamBuilder(
+        stream: ref.onValue,
+
+      builder: (context,snapshot) {
+        List<String>? move2 = snapshot.data?.snapshot.child("move").value.toString().split(",")??
+            ["","","","","","","","",""];
+        String turn = snapshot.data!.snapshot.child("turn").value.toString();
+
+        return GridView.builder(
+          itemCount: 9,
+          gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -76,9 +78,9 @@ class _GameGridOnlineState extends State<GameGridOnline> {
                 ),
               ),
             );
-          }
+          },
         );
-      },
+      }
     );
   }
   // get list
@@ -98,8 +100,8 @@ class _GameGridOnlineState extends State<GameGridOnline> {
     move = move.substring(1,move.length-1);
     await ref.update({"move": move});
     await ref.update({"turn": turn=='P'?'O':'P'});
+    widget.winCheck();
   }
-
   // void toggleturn() {
   //   DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
   //   ref.child("turn").onValue.listen((event) {
@@ -108,6 +110,8 @@ class _GameGridOnlineState extends State<GameGridOnline> {
   //     });
   //   });
   // }
+
+
 
 
 }
