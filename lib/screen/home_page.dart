@@ -3,10 +3,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pop/screen/RoomScreen.dart';
-import 'package:pop/screen/joinRoom.dart';
+import 'package:pop/screen/onlineGame/RoomScreen.dart';
+import 'package:pop/screen/onlineGame/joinRoom.dart';
 import 'package:pop/screen/onlineGame/onlinePlay.dart';
-import 'package:pop/screen/play_online.dart';
+import 'package:pop/screen/LoginScreen.dart';
 import 'package:pop/screen/play_with_ai.dart';
 import 'package:pop/screen/two_player.dart';
 
@@ -142,14 +142,14 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => JoinRoomScreen(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => JoinRoomScreen(tag: "JOIN ROOM",),));
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(240.w, 50.h),
                 backgroundColor: const Color.fromARGB(255, 255, 230, 0),
               ),
               child: const Text(
-                "JOIN ROOM  ",
+                "JOIN ROOM",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -162,7 +162,7 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                createRoom(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => JoinRoomScreen(tag: "CREATE ROOM",),));
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(240.w, 50.h),
@@ -182,19 +182,5 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Future<void> createRoom(BuildContext context) async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
-    String gameKey = ref.push().key.toString();
-    Map<String, String>  map = {
-      "move":",,,,,,,,",
-      "player1":"rahul",
-      "player2":"Waiting...",
-      "turn":"P",
-      'winner':"N/A",
-      'isStart':"NO",
 
-    };
-    await ref.child(gameKey).set(map);
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>  RoomScreen(gameID: gameKey,userType: "CREATE",),));
-  }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pop/screen/onlineGame/onlineGrid.dart';
@@ -9,7 +10,8 @@ import 'GameStatusFirebase.dart';
 
 class OnlinePlay extends StatefulWidget {
   final String gameID;
-  const OnlinePlay({required this.gameID});
+  final String usrType;
+  const OnlinePlay({required this.gameID,required this.usrType});
 
   @override
   State<OnlinePlay> createState() => _OnlinePlayState();
@@ -120,42 +122,61 @@ class _OnlinePlayState extends State<OnlinePlay> {
       ),
     );
   }
+  DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    onBack();
+  }
 
   @override
   Widget build(BuildContext context) {
     // if (moveCount == 9) {
     //   showDialogBox();
     // }
-    return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        color: const Color.fromARGB(255, 1, 29, 51),
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 40.h,
-              ),
-              GameStatusFirebase(widget.gameID),
-              SizedBox(
-                height: 150.h,
-              ),
-              Expanded(
-                  child: GameGridOnline(
-                      // move: move,
-                      // turn: turn,
-                      moveCount: moveCount,
-                      toggleMove: toggleMove,
-                      winCheck: winCheck,
-                      incrementMoveCount: incrementMoveCount,
-                      gameId: widget.gameID,)),
-              ScoreCard(pWinCount, tiesCount, oWinCount, "P1", "P2"),
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        await ref.child(widget.gameID).remove();
+        return true;
+      },
+      child: Scaffold(
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: const Color.fromARGB(255, 1, 29, 51),
+          child: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40.h,
+                ),
+                GameStatusFirebase(widget.gameID),
+                SizedBox(
+                  height: 150.h,
+                ),
+                Expanded(
+                    child: GameGridOnline(
+                        moveCount: moveCount,
+                        toggleMove: toggleMove,
+                        winCheck: winCheck,
+                        incrementMoveCount: incrementMoveCount,
+                        gameId: widget.gameID, userType: widget.usrType,)),
+                ScoreCard(pWinCount, tiesCount, oWinCount, "P1", "P2"),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void onBack() {
+    ref.child(widget.gameID.toString()).onValue.listen((event) {
+      if (event.snapshot.value == null) {
+        Navigator.pop(context);
+      }
+    });
   }
 }

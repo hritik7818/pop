@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 
 class GameGridOnline extends StatefulWidget {
   // List move;
@@ -8,11 +10,11 @@ class GameGridOnline extends StatefulWidget {
   final int moveCount;
   final Function incrementMoveCount;
   final Function winCheck;
-  // late final String turn;
+  late final String userType;
   final String gameId;
    GameGridOnline({
     // required this.move,
-    // required this.turn,
+    required this.userType,
     required this.moveCount,
     required this.toggleMove,
     required this.winCheck,
@@ -27,10 +29,12 @@ class GameGridOnline extends StatefulWidget {
 class _GameGridOnlineState extends State<GameGridOnline> {
   late DatabaseReference ref;
   bool isGridActive = true;
+  List<String> move2 = [];
   @override
   void initState() {
     ref = FirebaseDatabase.instance.ref("GameRooms/${widget.gameId}");
-    onUpdateList();
+    // onUpdateList();
+    onMoveUpdate();
     super.initState();
   }
 
@@ -40,20 +44,29 @@ class _GameGridOnlineState extends State<GameGridOnline> {
     return StreamBuilder(
         stream: ref.onValue,
       builder: (context,snapshot) {
-        List<String>? move2 = snapshot.data?.snapshot.child("move").value.toString().split(",")??
-            ["","","","","","","","",""];
-        String turn = snapshot.data!.snapshot.child("turn").value.toString();
-
-        return GridView.builder(
+        String turn = "P";
+          if(snapshot.data!=null && snapshot.data?.snapshot!=null){
+            move2 = snapshot.data!.snapshot.child("move").value.toString().split(",");
+            turn = snapshot.data!.snapshot.child("turn").value.toString();
+          }
+        return (snapshot.data!=null && snapshot.data?.snapshot!=null)?
+        GridView.builder(
           itemCount: 9,
           gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-                  updateMove(ref,move2,index,turn.trim());
+                  if(turn=='O' && widget.userType=='JOIN' && move2[index].toString().trim() == ""){
+                    Fluttertoast.showToast(msg: "OO: turn: $turn user: ${widget.userType}");
+                    updateMove(ref,move2,index,turn.trim());
+                  }
+                  if(turn=='P' && widget.userType=='CREATE' && move2[index].toString().trim() == ""){
+                    Fluttertoast.showToast(msg: "PP: turn: $turn user: ${widget.userType}");
+                    updateMove(ref,move2,index,turn.trim());
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -64,12 +77,40 @@ class _GameGridOnlineState extends State<GameGridOnline> {
                   width: 90.h,
                   child: Center(
                     child: Text(
-                      move2[index].toString().trim()??"",
+                      move2!=null? move2[index].toString().trim() ?? "":"",
                       style: TextStyle(
                         color: move2[index].trim() == "P" ? Colors.blue : Colors.yellow,
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ):
+        // fake grid
+        GridView.builder(
+          itemCount: 9,
+          gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.r),
+                  color: Colors.black,
+                ),
+                height: 90.h,
+                width: 90.h,
+                child: const Center(
+                  child: Text(
+                    "",
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -85,18 +126,16 @@ class _GameGridOnlineState extends State<GameGridOnline> {
     for(int i = 0; i<list.length; i++){
       list[i] = list[i].trim();
     }
-    print('before update  $list');
     list[index] = turn;
     String move =  list.toString();
     move = move.substring(1,move.length-1);
     await ref.update({"move": move});
-    print('after update  $list');
     await ref.update({"turn": turn=='P'?'O':'P'});
 
   }
 
 
-  winCheck(List move, String turn) {
+  winCheck(List move, String turn,int count) {
     List win = [
       [0, 1, 2],
       [3, 4, 5],
@@ -108,19 +147,21 @@ class _GameGridOnlineState extends State<GameGridOnline> {
       [2, 4, 6],
     ];
     for (var i = 0; i < win.length; i++) {
-      if ((move[win[i][0]].toString().trim() == "P" && move[win[i][1]].toString().trim() == "O" && move[win[i][2]].toString().trim() == "P")) {
-        showDialogBox("$turn win");
+      if (move[win[i][0]].toString().trim() == "P"
+          && move[win[i][1]].toString().trim() == "O"
+          && move[win[i][2]].toString().trim() == "P") {
+
+        showDialogBox("$turn win $count");
       }
     }
 
   }
 
-  onUpdateList(){
+  onMoveUpdate(){
     ref.onValue.listen((event) {
-      List<String>? move2 = event.snapshot.child("move").value.toString().split(",")?? ["","","","","","","","",""];
       String turn = event.snapshot.child("turn").value.toString();
-      if(move2!=null){
-        winCheck(move2, turn);
+      if(move2.length!=0){
+        winCheck(move2, turn,0);
         }
     });
   }
@@ -135,16 +176,20 @@ class _GameGridOnlineState extends State<GameGridOnline> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                move2 = [];
                 Navigator.of(context).pop();
+                await ref.update({"move":",,,,,,,,"});
+
               },
-              child: const Text("Play"),
+              child: const Text("Play Again"),
             ),
             ElevatedButton(
               onPressed: () {
                 // Navigator.of(context).popUntil(ModalRoute.withName("homepage"));
+                Navigator.pop(context);
               },
-              child: const Text("EXIT"),
+              child: const Text("Close"),
             ),
           ],
         ),

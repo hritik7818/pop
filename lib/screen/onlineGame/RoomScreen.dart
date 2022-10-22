@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +17,13 @@ class RoomScreen extends StatefulWidget {
 
 class _RoomScreenState extends State<RoomScreen> {
   DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
+  bool flag = false;
 
   @override
   void initState() {
     super.initState();
     onBack();
-    gameStarter();
+    sendToGameScreen();
   }
 
   @override
@@ -31,6 +34,13 @@ class _RoomScreenState extends State<RoomScreen> {
         return true;
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 166, 56, 56),
+          title: const Text("Room",style: TextStyle(color: Colors.white),),
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+        ),
         body: Container(
           color: const Color.fromARGB(255, 166, 56, 56),
           width: MediaQuery.of(context).size.width,
@@ -99,79 +109,83 @@ class _RoomScreenState extends State<RoomScreen> {
                     // Map<dynamic, dynamic> map = snapshot.data?.snapshot.value as dynamic;
                     // print(map);
                     DataSnapshot? data = snapshot.data?.snapshot;
+                    String? player2 = data?.child("player2").value.toString().trim();
+
                     return snapshot.data != null
-                        ? Row(
-                            children: [
-                              const Spacer(),
-                              Column(
+                        ? Column(
+                          children: [
+                            Row(
                                 children: [
-                                  Container(
-                                    height: 100,
-                                    width: 100,
-                                    color: Colors.white,
+                                  const Spacer(),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        "images/icon${randomNoGeneratorInRange(1, 9)}.png",
+                                        height: 100,
+                                        width: 100,
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        data!.child("player1").value.toString(),
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    height: 20,
+                                  const Spacer(),
+                                  const Text(
+                                    "VS",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
                                   ),
-                                  Text(
-                                    data!.child("player1").value.toString(),
-                                    style: const TextStyle(color: Colors.white),
+                                  const Spacer(),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        "images/icon${randomNoGeneratorInRange(1, 9)}.png",
+                                        height: 100,
+                                        width: 100,
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        data.child("player2").value.toString(),
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
+                                  const Spacer(),
                                 ],
                               ),
-                              const Spacer(),
-                              const Text(
-                                "VS",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                            const SizedBox(
+                              height: 50,
+                            ),
+                            (widget.userType == 'CREATE') ? ElevatedButton(
+                              onPressed: player2 !="Waiting..."?() {
+                                startGame();
+                              }:null,
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: Size(240.w, 50.h),
+                                backgroundColor: player2 =="Waiting..."?Colors.grey:const Color.fromARGB(255, 255, 230, 0),
                               ),
-                              const Spacer(),
-                              Column(
-                                children: [
-                                  Container(
-                                    height: 100,
-                                    width: 100,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    data.child("player2").value.toString(),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
+                              child:  Text(
+                                player2 =="Waiting..."?"Waiting...":"START GAME",
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
                               ),
-                              const Spacer(),
-                            ],
-                          )
+                            ) : const SizedBox()
+                          ],
+                        )
                         : const Center(
                             child: CircularProgressIndicator(
                               color: Colors.white,
                             ),
                           );
                   }),
-              const SizedBox(
-                height: 50,
-              ),
-              (widget.userType == 'CREATE')
-                  ? ElevatedButton(
-                      onPressed: () {
-                        startGame();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: Size(240.w, 50.h),
-                        backgroundColor: const Color.fromARGB(255, 255, 230, 0),
-                      ),
-                      child: const Text(
-                        "START GAME  ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                      ),
-                    )
-                  : const SizedBox()
             ],
           ),
         ),
@@ -187,14 +201,11 @@ class _RoomScreenState extends State<RoomScreen> {
     });
   }
 
-  void gameStarter() {
+  void sendToGameScreen() {
     ref.child("${widget.gameID}/isStart").onValue.listen((event) {
-      if (widget.userType == 'JOIN' &&
-          event.snapshot.value.toString() == 'YES') {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OnlinePlay(gameID: widget.gameID),
+      if (event.snapshot.value.toString() == 'YES') {
+        Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => OnlinePlay(gameID: widget.gameID, usrType: widget.userType,),
             ));
       }
     });
@@ -205,12 +216,11 @@ class _RoomScreenState extends State<RoomScreen> {
       "isStart": "YES",
     };
     await ref.child(widget.gameID.toString()).update(map);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => OnlinePlay(
-            gameID: widget.gameID,
-          ),
-        ));
+  }
+  int randomNoGeneratorInRange(int min, int max){
+    Random rnd;
+    rnd = Random();
+    int r = min + rnd.nextInt(max - min);
+    return r;
   }
 }

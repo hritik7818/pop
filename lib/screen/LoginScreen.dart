@@ -4,14 +4,14 @@ import 'package:pop/screen/loadingPage.dart';
 import 'package:pop/screen/login.dart';
 import 'package:provider/provider.dart';
 
-class PlayOnline extends StatefulWidget {
-  const PlayOnline({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<PlayOnline> createState() => _PlayOnlineState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _PlayOnlineState extends State<PlayOnline> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<FirebaseService>(context);

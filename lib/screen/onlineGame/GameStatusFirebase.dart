@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pop/firebase_services/authentication_services.dart';
+import 'package:pop/uitls/uid.dart';
 import 'package:provider/provider.dart';
 
 class GameStatusFirebase extends StatefulWidget {
@@ -73,7 +74,7 @@ class _GameStatusFirebaseState extends State<GameStatusFirebase> {
                       return Text(
                         turn,
                         style: TextStyle(
-                          color: turn=="P"?Colors.white:Colors.blue,
+                          color: turn=="P"?Colors.blue:Colors.yellow,
                           fontSize: 30.sp,
                           fontWeight: FontWeight.bold,
 
@@ -100,13 +101,13 @@ class _GameStatusFirebaseState extends State<GameStatusFirebase> {
         ),
         IconButton(
           onPressed: () {
-            // widget.resetMove();
-            // provider.signOut();
-            // removeGameSession(ref);
-            // Navigator.pop(context);
+            DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
+             ref.child(gameId).remove().then((value){
+               Navigator.pop(context);
+             });
           },
           icon: const Icon(
-            Icons.logout_sharp,
+            Icons.exit_to_app_outlined,
             size: 30,
           ),
           color: Colors.blue,
