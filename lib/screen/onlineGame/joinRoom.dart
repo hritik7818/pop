@@ -194,6 +194,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
   Future<void> createRoom(BuildContext context,String name) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
     String gameKey = "123";
+    // String gameKey = ref.push().key.toString();
     Map<String, String>  map = {
       "move":",,,,,,,,",
       "player1":name,

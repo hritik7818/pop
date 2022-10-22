@@ -49,8 +49,7 @@ class _GameGridOnlineState extends State<GameGridOnline> {
             move2 = snapshot.data!.snapshot.child("move").value.toString().split(",");
             turn = snapshot.data!.snapshot.child("turn").value.toString();
           }
-        return (snapshot.data!=null && snapshot.data?.snapshot!=null)?
-        GridView.builder(
+        return GridView.builder(
           itemCount: 9,
           gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
@@ -89,35 +88,35 @@ class _GameGridOnlineState extends State<GameGridOnline> {
               ),
             );
           },
-        ):
-        // fake grid
-        GridView.builder(
-          itemCount: 9,
-          gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.r),
-                  color: Colors.black,
-                ),
-                height: 90.h,
-                width: 90.h,
-                child: const Center(
-                  child: Text(
-                    "",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
         );
+        // fake grid
+        // GridView.builder(
+        //   itemCount: 9,
+        //   gridDelegate:
+        //   const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        //   itemBuilder: (context, index) {
+        //     return Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: Container(
+        //         decoration: BoxDecoration(
+        //           borderRadius: BorderRadius.circular(8.r),
+        //           color: Colors.black,
+        //         ),
+        //         height: 90.h,
+        //         width: 90.h,
+        //         child: const Center(
+        //           child: Text(
+        //             "",
+        //             style: TextStyle(
+        //               fontSize: 40,
+        //               fontWeight: FontWeight.bold,
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // );
       }
     );
   }
