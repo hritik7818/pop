@@ -8,9 +8,10 @@ import 'package:pop/screen/onlineGame/joinRoom.dart';
 import 'package:pop/screen/onlineGame/onlinePlay.dart';
 import 'package:pop/screen/LoginScreen.dart';
 import 'package:pop/screen/play_with_ai.dart';
+import 'package:pop/screen/randomGame/joinsocket.dart';
 import 'package:pop/screen/two_player.dart';
 
-import 'FindingScreen.dart';
+import 'randomGame/FindingScreen.dart';
 import 'login.dart';
 
 class HomePage extends StatelessWidget {
@@ -108,28 +109,14 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                FirebaseAuth auth  = FirebaseAuth.instance;
-                if(auth.currentUser==null)
-                  {
-                    // not login
-                    Fluttertoast.showToast(msg: "not login");
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage(),));
-
-                  }else{
-                  Fluttertoast.showToast(msg: "user is login");
-                  //login
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const FindingScreen(),));
-                }
-
-                // Navigator.of(context).push(MaterialPageRoute(settings: const RouteSettings(name: "homepage"),
-                //     builder: (context) => const PlayOnline()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  JoinSocket(),));
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(240.w, 50.h),
                 backgroundColor: const Color.fromARGB(255, 255, 230, 0),
               ),
               child: const Text(
-                "PLAY ONLINE  ",
+                "RANDOM",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -176,6 +163,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+
           ],
         ),
       ),

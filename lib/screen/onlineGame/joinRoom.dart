@@ -8,7 +8,7 @@ import 'package:pop/screen/LoginScreen.dart';
 import 'package:pop/screen/play_with_ai.dart';
 import 'package:pop/screen/two_player.dart';
 
-import '../FindingScreen.dart';
+import '../randomGame/FindingScreen.dart';
 import '../login.dart';
 
 class JoinRoomScreen extends StatefulWidget {

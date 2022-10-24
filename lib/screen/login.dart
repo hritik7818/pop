@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pop/screen/FindingScreen.dart';
+import 'package:pop/screen/randomGame/FindingScreen.dart';
 import 'package:pop/uitls/uid.dart';
 import 'package:provider/provider.dart';
 import 'package:pop/firebase_services/authentication_services.dart';
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
     if (result == null) {
       Fluttertoast.showToast(msg: "wrong email and password");
     } else {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => FindingScreen(),));
+    // Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => FindingScreen(),));
     }
   }
 }
