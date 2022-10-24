@@ -1,9 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pop/firebase_services/authentication_services.dart';
 import 'package:pop/uitls/uid.dart';
-import 'package:provider/provider.dart';
 
 class GameStatusFirebase extends StatefulWidget {
   final gameId;
@@ -21,6 +19,7 @@ class _GameStatusFirebaseState extends State<GameStatusFirebase> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -69,19 +68,21 @@ class _GameStatusFirebaseState extends State<GameStatusFirebase> {
                 FittedBox(
                   child: StreamBuilder(
                       stream: ref.onValue,
-                    builder: (context,snapshot) {
-                      String turn = snapshot.data!.snapshot.child("turn").value.toString();
-                      return Text(
-                        turn,
-                        style: TextStyle(
-                          color: turn=="P"?Colors.blue:Colors.yellow,
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.bold,
-
-                        ),
-                      );
-                    }
-                  ),
+                      builder: (context, snapshot) {
+                        String? turn = snapshot.data?.snapshot
+                            .child("turn")
+                            .value
+                            .toString();
+                        turn = turn ?? "P";
+                        return Text(
+                          turn,
+                          style: TextStyle(
+                            color: turn == "P" ? Colors.blue : Colors.yellow,
+                            fontSize: 30.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }),
                 ),
                 SizedBox(
                   width: 10.w,
@@ -102,9 +103,9 @@ class _GameStatusFirebaseState extends State<GameStatusFirebase> {
         IconButton(
           onPressed: () {
             DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
-             ref.child(gameId).remove().then((value){
-               Navigator.pop(context);
-             });
+            ref.child(gameId).remove().then((value) {
+              Navigator.pop(context);
+            });
           },
           icon: const Icon(
             Icons.exit_to_app_outlined,
