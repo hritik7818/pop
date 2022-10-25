@@ -26,6 +26,11 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 166, 56, 56),
+        title: Text(widget.tag),
+      ),
       body: Container(
         color: const Color.fromARGB(255, 166, 56, 56),
         width: MediaQuery.of(context).size.width,
@@ -147,7 +152,6 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
                 }else{
                   if ( name_controller.text.trim() != '') {
                     createRoom(context,name_controller.text);
-
                   } else {
                     Fluttertoast.showToast(msg: "Enter name");
                   }
@@ -193,8 +197,8 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
 
   Future<void> createRoom(BuildContext context,String name) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
-    String gameKey = "123";
-    // String gameKey = ref.push().key.toString();
+    // String gameKey = "123";
+    String gameKey = ref.push().key.toString();
     Map<String, String>  map = {
       "move":",,,,,,,,",
       "player1":name,

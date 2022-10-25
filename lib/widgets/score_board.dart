@@ -13,13 +13,15 @@ class ScoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Board(Colors.blue, "P", "($p1Name)", pWinCount),
-        Board(Colors.white70, "TIES", "", tiesCount),
-        Board(Colors.yellow, "O", "($p2Name)", oWinCount),
-      ],
+    return SizedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Board(Colors.blue, "P", "($p1Name)", pWinCount),
+          Board(Colors.white70, "TIES", "", tiesCount),
+          Board(Colors.yellow, "O", "($p2Name)", oWinCount),
+        ],
+      ),
     );
   }
 }
