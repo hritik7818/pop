@@ -48,6 +48,7 @@ dependencies:
   lottie: ^1.4.3
   clipboard: ^0.1.3
   socket_io_client: ^2.0.0
+  audioplayers: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -73,7 +74,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/
+    - assets/
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -87,10 +89,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Agrandir-GrandHeavy
+      fonts:
+        - asset: assets/fonts/Agrandir-GrandHeavy.otf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

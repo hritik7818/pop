@@ -14,7 +14,7 @@ import '../onlineGame/RoomScreen.dart';
 
 class FindingScreen extends StatefulWidget {
   String name;
-   FindingScreen({required this.name});
+  FindingScreen({required this.name});
 
   @override
   State<FindingScreen> createState() => _FindingScreenState();
@@ -32,12 +32,11 @@ class _FindingScreenState extends State<FindingScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    socket =
-        io(serverUrl, <String, dynamic>{
-          "transports": ["websocket"],
-          "autoConnect": false,
-        });
-    socket.connect();  //connect the Socket.IO Client to the Server
+    socket = io(serverUrl, <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket.connect(); //connect the Socket.IO Client to the Server
     initializeSocket();
     super.initState();
   }
@@ -47,6 +46,7 @@ class _FindingScreenState extends State<FindingScreen> {
     super.dispose();
     socket.disconnect();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +55,9 @@ class _FindingScreenState extends State<FindingScreen> {
         children: [
           Text(status),
           Text(message),
-          SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Text('partner id: $partner'),
           Text('gameID: $game'),
           Lottie.network(
@@ -69,7 +71,7 @@ class _FindingScreenState extends State<FindingScreen> {
     //SOCKET EVENTS
     // --> listening for connection
     socket.on('connect', (data) {
-      socket.emit("add user","rahul");
+      socket.emit("add user", "rahul");
       setState(() {
         status = "connected ${socket.id}";
       });
@@ -77,22 +79,22 @@ class _FindingScreenState extends State<FindingScreen> {
 
     //listen for incoming messages from the Server.
     socket.on('message', (data) {
-    print("data: $data");
+      print("data: $data");
 
-      Map<dynamic,dynamic> map = data;
-    print("data: ${map["someProperty"]??""}");
+      Map<dynamic, dynamic> map = data;
+      print("data: ${map["someProperty"] ?? ""}");
       setState(() {
-        message = map["someProperty"]??"";
+        message = map["someProperty"] ?? "";
       });
     });
 
     socket.on('init', (data) {
-      Map<dynamic,dynamic> map = data;
+      Map<dynamic, dynamic> map = data;
       print("MY-INFO: $data");
     });
 
     socket.on('partner', (data) {
-      Map<dynamic,dynamic> map = data;
+      Map<dynamic, dynamic> map = data;
       print("PARTNER: $data");
       setState(() {
         partner = map['partnerSocketID'];
@@ -100,33 +102,33 @@ class _FindingScreenState extends State<FindingScreen> {
       });
 
       createRoom(context, map['gameID'], map['TYPE'], map['name']);
-
-
     });
 
     //listens when the client is disconnected from the Server
     socket.on('disconnect', (data) {
-     Navigator.pop(context);
+      Navigator.pop(context);
     });
   }
 
-
-  Future<void> createRoom(BuildContext context,GAMEID,type,name) async {
+  Future<void> createRoom(BuildContext context, GAMEID, type, name) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("GameRooms");
     // String gameKey = "123";
     // String gameKey = ref.push().key.toString();
-    Map<String, String>  map = {
-      "move":",,,,,,,,",
-      "turn":"P",
-      'winner':"N/A",
-      'isStart':"NO",
+    Map<String, String> map = {
+      "move": ",,,,,,,,",
+      "turn": "P",
+      'winner': "N/A",
+      'isStart': "NO",
     };
     await ref.child(GAMEID).set(map);
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-        OnlinePlay(gameID: GAMEID,usrType: type,),));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OnlinePlay(
+            gameID: GAMEID,
+            usrType: type,
+          ),
+        ));
   }
-
-
-
 }

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pop/provdier/login_provider.dart';
 import 'package:pop/provdier/register_provider.dart';
 import 'package:pop/provdier/test_provider.dart';
-import 'package:pop/screen/home_page.dart';
+import 'package:pop/screen/newGame/first_page.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const HomePage(),
+        home: const FirstScreen(),
       ),
       designSize: const Size(414, 896),
     );

@@ -167,8 +167,9 @@ class _GameGridOnlineState extends State<GameGridOnline> {
   onMoveUpdate() {
     ref.child("turn").onValue.listen((event) {
       String turn = event.snapshot.child("turn").value.toString();
-
-      winCheck(move2, turn, 0);
+     
+        
+        winCheck(move2, turn, 0);
       print("win checked");
     });
   }

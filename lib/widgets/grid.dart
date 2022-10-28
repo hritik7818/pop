@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -35,7 +36,8 @@ class _GameGridState extends State<GameGrid> {
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () {
+          onTap: () async {
+            await AudioPlayer().play(AssetSource('click.mp3'));
             widget.move[index] == "" && isGridActive
                 ? setState(() {
                     if (widget.isPlayerWin != null) {
