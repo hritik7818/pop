@@ -26,7 +26,11 @@ class _ChoosePageState extends State<ChoosePage> {
           });
 
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NewGamePage((pSelect != "" ? "P" : "0"))));
+              builder: (context) => NewGamePage((pSelect != ""
+                  ? "P"
+                  : (oSelect != "")
+                      ? "0"
+                      : ""))));
         } else {
           setState(() {
             _start--;
