@@ -71,17 +71,15 @@ class _NewGamePageState extends State<NewGamePage> {
   int bothMoveCount = 0;
   bool gameComplete = false;
   List move = ["", "", "", "", "", "", "", "", ""];
-  int pWinCount = 0;
-  int oWinCount = 0;
-  int tiesCount = 0;
+
   bool isPlayerWin = false;
   String lineType = "";
 
   String turn = "P";
 
-  List startWithP = ["P", "O", "P", "O", "P", "O", "P"];
+  List startWithP = ["P", "O", "P", "O", "P", "O", "P", "O", "P"];
 
-  List startWithO = ["O", "P", "O", "P", "O", "P", "O"];
+  List startWithO = ["O", "P", "O", "P", "O", "P", "O", "P", "O"];
 
   late List playerMoves;
   late List aiMoves;
@@ -169,12 +167,10 @@ class _NewGamePageState extends State<NewGamePage> {
           if (gameComplete) {
             if (turn == "O") {
               setState(() {
-                pWinCount++;
                 isPlayerWin = true;
               });
             } else {
               setState(() {
-                oWinCount++;
                 isPlayerWin = true;
               });
             }
@@ -215,11 +211,6 @@ class _NewGamePageState extends State<NewGamePage> {
             MaterialPageRoute(builder: (context) => const GameOver("tie")));
         _timer.cancel();
       }));
-
-      moveCount = 0;
-      setState(() {
-        tiesCount++;
-      });
     }
   }
 
@@ -227,16 +218,19 @@ class _NewGamePageState extends State<NewGamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+          child: Container(
+        color: Colors.black,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Expanded(
-            flex: 8,
+            flex: 6,
             child: Container(
               color: Colors.black,
               width: double.infinity,
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
                   SizedBox(
                     height: 130,
                     child: Stack(
@@ -248,22 +242,47 @@ class _NewGamePageState extends State<NewGamePage> {
                               children: [
                                 Expanded(
                                     child: Container(
-                                  height: 60,
-                                  color: (turn == "P")
-                                      ? const Color.fromARGB(255, 255, 230, 0)
-                                      : const Color.fromARGB(255, 150, 140, 48),
+                                  height: 100,
+                                  color: (moveCount % 2 == 0)
+                                      ? Colors.red
+                                      : const Color.fromARGB(255, 113, 38, 32),
                                   child: Center(
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
-                                        Text(
-                                          "Player 1",
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                          ),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            const Text(
+                                              "YOU",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            const Text("CURRENT MOVE :"),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              playerMoves[bothMoveCount],
+                                              style: const TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 30,
                                         )
                                       ],
@@ -272,23 +291,48 @@ class _NewGamePageState extends State<NewGamePage> {
                                 )),
                                 Expanded(
                                     child: Container(
-                                  height: 60,
-                                  color: (turn == "P")
-                                      ? const Color.fromARGB(255, 67, 145, 70)
-                                      : const Color.fromARGB(184, 3, 249, 7),
+                                  height: 100,
+                                  color: (moveCount % 2 != 0)
+                                      ? Colors.blue
+                                      : const Color.fromARGB(255, 32, 75, 110),
                                   child: Center(
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
-                                        SizedBox(
+                                      children: [
+                                        const SizedBox(
                                           width: 20,
                                         ),
-                                        Text(
-                                          "Player 2",
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                          ),
+                                        Column(
+                                          children: [
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            const Text(
+                                              "OPPONENT",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            const Text("CURRENT MOVE :"),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              aiMoves[bothMoveCount],
+                                              style: const TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            )
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -330,6 +374,9 @@ class _NewGamePageState extends State<NewGamePage> {
                       ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -351,7 +398,7 @@ class _NewGamePageState extends State<NewGamePage> {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      (move[index] == "" && turn == "P")
+                                      (move[index] == "" && moveCount % 2 == 0)
                                           ? setState(() {
                                               move[index] =
                                                   playerMoves[bothMoveCount];
@@ -365,7 +412,7 @@ class _NewGamePageState extends State<NewGamePage> {
                                                   AssetSource('click.mp3'));
 
                                               Future.delayed(
-                                                  const Duration(seconds: 1),
+                                                  const Duration(seconds: 2),
                                                   () {
                                                 if (moveCount < 9 &&
                                                     !isPlayerWin) {
@@ -374,6 +421,7 @@ class _NewGamePageState extends State<NewGamePage> {
                                                       i++) {
                                                     if (move[i] == "") {
                                                       findAndFillBlankBox();
+
                                                       AudioPlayer().play(
                                                           AssetSource(
                                                               'click.mp3'));
@@ -394,7 +442,9 @@ class _NewGamePageState extends State<NewGamePage> {
                                             const BoxConstraints.expand(),
                                         child: (move[index] != "")
                                             ? Image.asset(
-                                                "assets/images/${move[index]}.png")
+                                                "assets/images/${move[index]}.png",
+                                                height: 70,
+                                              )
                                             : const Text(""),
                                       ),
                                     ),
@@ -510,88 +560,30 @@ class _NewGamePageState extends State<NewGamePage> {
             ),
           ),
           Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.yellow,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "NEXT TURN :",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(
-                          height: 9,
-                        ),
-                        Text(
-                          "Player ${(turn == "P") ? "2" : "1"}",
-                          style: const TextStyle(fontSize: 25),
-                        ),
-                      ],
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(70),
+                  color: Colors.white,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 20,
+                      ),
+                      child: Text(
+                        (moveCount % 2 != 0) ? "OPPONENT MOVE" : "YOUR MOVE",
+                        style: const TextStyle(fontSize: 20),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "CURRENT MOVE :",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(
-                          height: 9,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              playerMoves[bothMoveCount],
-                              style: const TextStyle(
-                                fontSize: 35,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              playerMoves[bothMoveCount + 1],
-                              style: const TextStyle(
-                                fontSize: 25,
-                                color: Color.fromARGB(201, 0, 0, 0),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              playerMoves[bothMoveCount + 2],
-                              style: const TextStyle(
-                                fontSize: 25,
-                                color: Color.fromARGB(201, 0, 0, 0),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
+        ]),
       )),
     );
   }

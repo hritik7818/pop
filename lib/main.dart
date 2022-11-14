@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pop/provdier/login_provider.dart';
 import 'package:pop/provdier/register_provider.dart';
 import 'package:pop/provdier/test_provider.dart';
+import 'package:pop/screen/newGame/choose_page.dart';
 import 'package:pop/screen/newGame/first_page.dart';
+import 'package:pop/screen/newGame/responsive.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -35,9 +37,11 @@ void main() async {
     ),
   ];
   runApp(
-    MultiProvider(
-      providers: providers,
-      child: const MyApp(),
+    Responsive(
+      MultiProvider(
+        providers: providers,
+        child: const MyApp(),
+      ),
     ),
   );
 }
